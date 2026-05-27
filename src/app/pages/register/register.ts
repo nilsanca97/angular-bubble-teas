@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -10,10 +11,12 @@ import { AuthService } from '../../services/auth.service';
 })
 
 export class Register {
-  // 1.inyectar el servicio de autenticacion. 
-  // usar el AuthService dentro de la pagina Register. 
-  //uso el constructor para inyectar dependencias (service autenticacion).
-  constructor(private authService: AuthService) {}
+  // Inyectar AuthService y Router en el componente Register
+  // para usar métodos de autenticación y navegar al home.
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   protected registerForm = new FormGroup({
     name: new FormControl<string>('', {
@@ -48,7 +51,8 @@ export class Register {
     this.authService.register(email!, password!)
       .then(response => {
         console.log('Registro exitoso:', response);
-        // aquí puedes redirigir al usuario o guardar datos
+        // redirigimos al home tras registro exitoso
+        this.router.navigate(['']);
       })
       .catch(error => {
         console.error('Error en registro:', error.message);
