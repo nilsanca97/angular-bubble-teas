@@ -1,13 +1,44 @@
 <form [formGroup]="loginForm">
+  <!-- Campo Email -->
   <div>
     <label for="email">Email</label>
     <input id="email" formControlName="email" type="email" />
+    
+    <!-- Mensajes de error para Email -->
+    @if (loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched) {
+      <span class="error">El email es requerido</span>
+    }
+    @if (loginForm.get('email')?.hasError('email') && loginForm.get('email')?.touched) {
+      <span class="error">Ingresa un email válido</span>
+    }
   </div>
 
+  <!-- Campo Password -->
   <div>
     <label for="password">Password</label>
     <input id="password" formControlName="password" type="password" />
+    
+    <!-- Mensajes de error para Password -->
+    @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
+      <span class="error">La contraseña es requerida</span>
+    }
+    @if (loginForm.get('password')?.hasError('minlength') && loginForm.get('password')?.touched) {
+      <span class="error">La contraseña debe tener al menos 6 caracteres</span>
+    }
   </div>
 
-  <button type="button" (click)="onLoginClick()">Login</button>
+  <!-- Botón Login --_> Botón deshabilitado si el formulario es inválido --> 
+  <button 
+    type="button" 
+    (click)="onLoginClick()"
+    [disabled]="loginForm.invalid"> 
+    Login
+  </button>
+
+  <!-- Mensaje de error general si el formulario es inválido -->
+  @if (loginForm.invalid && loginForm.touched) {
+    <div class="error-message">
+      Por favor, completa todos los campos correctamente
+    </div>
+  }
 </form>
