@@ -1,44 +1,64 @@
-<form [formGroup]="loginForm">
-  <!-- Campo Email -->
-  <div>
-    <label for="email">Email</label>
-    <input id="email" formControlName="email" type="email" />
-    
-    <!-- Mensajes de error para Email -->
-    @if (loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched) {
-      <span class="error">El email es requerido</span>
-    }
-    @if (loginForm.get('email')?.hasError('email') && loginForm.get('email')?.touched) {
-      <span class="error">Ingresa un email válido</span>
-    }
+<div class="login-container">
+  <div class="login-card">
+    <h2>Iniciar Sesión</h2>
+
+    <form [formGroup]="loginForm">
+      <!-- Campo Email con Material -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input 
+          matInput 
+          id="email"
+          formControlName="email" 
+          type="email"
+          (blur)="loginForm.get('email')?.markAsTouched()" />
+        
+        <!-- Errores para Email -->
+        @if (loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched) {
+          <mat-error>El email es requerido</mat-error>
+        }
+        @if (loginForm.get('email')?.hasError('email') && loginForm.get('email')?.touched) {
+          <mat-error>Ingresa un email válido</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Campo Password con Material -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Contraseña</mat-label>
+        <input 
+          matInput 
+          id="password"
+          formControlName="password" 
+          type="password"
+          (blur)="loginForm.get('password')?.markAsTouched()" />
+        
+        <!-- Errores para Password -->
+        @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
+          <mat-error>La contraseña es requerida</mat-error>
+        }
+        @if (loginForm.get('password')?.hasError('minlength') && loginForm.get('password')?.touched) {
+          <mat-error>Mínimo 6 caracteres</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Botón Login con Material -->
+      <button 
+        mat-raised-button 
+        color="primary"
+        type="button" 
+        (click)="onLoginClick()"
+        [disabled]="loginForm.invalid"
+        class="full-width">
+        Iniciar Sesión
+      </button>
+
+      <!-- Mensaje de error general -->
+      @if (loginForm.invalid && loginForm.touched) {
+        <div class="error-alert">
+          <mat-icon>error_outline</mat-icon>
+          <span>Por favor, completa todos los campos correctamente</span>
+        </div>
+      }
+    </form>
   </div>
-
-  <!-- Campo Password -->
-  <div>
-    <label for="password">Password</label>
-    <input id="password" formControlName="password" type="password" />
-    
-    <!-- Mensajes de error para Password -->
-    @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
-      <span class="error">La contraseña es requerida</span>
-    }
-    @if (loginForm.get('password')?.hasError('minlength') && loginForm.get('password')?.touched) {
-      <span class="error">La contraseña debe tener al menos 6 caracteres</span>
-    }
-  </div>
-
-  <!-- Botón Login --_> Botón deshabilitado si el formulario es inválido --> 
-  <button 
-    type="button" 
-    (click)="onLoginClick()"
-    [disabled]="loginForm.invalid"> 
-    Login
-  </button>
-
-  <!-- Mensaje de error general si el formulario es inválido -->
-  @if (loginForm.invalid && loginForm.touched) {
-    <div class="error-message">
-      Por favor, completa todos los campos correctamente
-    </div>
-  }
-</form>
+</div>
