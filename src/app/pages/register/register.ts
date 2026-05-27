@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -9,6 +10,11 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 })
 
 export class Register {
+  // 1.inyectar el servicio de autenticacion. 
+  // usar el AuthService dentro de la pagina Register. 
+  //uso el constructor para inyectar dependencias (service autenticacion).
+  constructor(private authService: AuthService) {}
+
   protected registerForm = new FormGroup({
     name: new FormControl<string>('', {
       nonNullable: true,
@@ -30,7 +36,23 @@ export class Register {
 
   protected onRegisterClick(): void {
     const { name, email, password, confirmPassword } = this.registerForm.value;
-    console.log({ name, email, password, confirmPassword });
-    // aquí puedes validar la confirmación de password o hacer otra acción
+    
+    //2. Validar que las contraseñas coincidan
+    if (password !== confirmPassword) {
+    console.error('Las contraseñas no coinciden');
+    return;
+    }
+
+    //Llamar al método de registro del servicio de autenticación (firebase)
+    //3. envia a Firebase y espera la respuesta.
+    this.authService.register(email!, password!)
+      .then(response => {
+        console.log('Registro exitoso:', response);
+        // aquí puedes redirigir al usuario o guardar datos
+      })
+      .catch(error => {
+        console.error('Error en registro:', error.message);
+      });
+  
   }
 }
