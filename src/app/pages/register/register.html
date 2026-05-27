@@ -1,23 +1,56 @@
 <form [formGroup]="registerForm">
+  <!-- Nombre -->
   <div>
     <label for="name">Name</label>
-    <input id="name" formControlName="name" type="text" />
+    <input id="name" formControlName="name" type="text" (blur)="registerForm.get('name')?.markAsTouched()" />
+    @if (registerForm.get('name')?.hasError('required') && registerForm.get('name')?.touched) {
+      <span class="error">El nombre es requerido</span>
+    }
   </div>
 
+  <!-- Email -->
   <div>
     <label for="email">Email</label>
-    <input id="email" formControlName="email" type="email" />
+    <input id="email" formControlName="email" type="email" (blur)="registerForm.get('email')?.markAsTouched()" />
+    @if (registerForm.get('email')?.hasError('required') && registerForm.get('email')?.touched) {
+      <span class="error">El email es requerido</span>
+    }
+    @if (registerForm.get('email')?.hasError('email') && registerForm.get('email')?.touched) {
+      <span class="error">Ingresa un email válido</span>
+    }
   </div>
 
+  <!-- Password -->
   <div>
     <label for="password">Password</label>
-    <input id="password" formControlName="password" type="password" />
+    <input id="password" formControlName="password" type="password" (blur)="registerForm.get('password')?.markAsTouched()" />
+    @if (registerForm.get('password')?.hasError('required') && registerForm.get('password')?.touched) {
+      <span class="error">La contraseña es requerida</span>
+    }
+    @if (registerForm.get('password')?.hasError('minlength') && registerForm.get('password')?.touched) {
+      <span class="error">La contraseña debe tener al menos 6 caracteres</span>
+    }
   </div>
 
+  <!-- Confirm Password -->
   <div>
     <label for="confirmPassword">Confirm Password</label>
-    <input id="confirmPassword" formControlName="confirmPassword" type="password" />
+    <input id="confirmPassword" formControlName="confirmPassword" type="password" (blur)="registerForm.get('confirmPassword')?.markAsTouched()" />
+    @if (registerForm.get('confirmPassword')?.hasError('required') && registerForm.get('confirmPassword')?.touched) {
+      <span class="error">Confirma la contraseña</span>
+    }
   </div>
 
-  <button type="button" (click)="onRegisterClick()">Registrar</button>
+  <!-- Botón deshabilitado si el formulario es inválido -->
+  <button 
+    type="button" 
+    (click)="onRegisterClick()" 
+    [disabled]="registerForm.invalid">
+    Registrar
+  </button>
+
+  <!-- Mensaje de error general si hay errores y el formulario fue tocado -->
+  @if (registerForm.invalid && registerForm.touched) {
+    <div class="error-message">Por favor corrige los errores del formulario</div>
+  }
 </form>
