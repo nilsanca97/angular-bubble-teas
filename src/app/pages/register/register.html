@@ -1,1 +1,23 @@
-<p>register works!</p>
+<form [formGroup]="registerForm">
+  <div>
+    <label for="name">Name</label>
+    <input id="name" formControlName="name" type="text" />
+  </div>
+
+  <div>
+    <label for="email">Email</label>
+    <input id="email" formControlName="email" type="email" />
+  </div>
+
+  <div>
+    <label for="password">Password</label>
+    <input id="password" formControlName="password" type="password" />
+  </div>
+
+  <div>
+    <label for="confirmPassword">Confirm Password</label>
+    <input id="confirmPassword" formControlName="confirmPassword" type="password" />
+  </div>
+
+  <button type="button" (click)="onRegisterClick()">Registrar</button>
+</form>
