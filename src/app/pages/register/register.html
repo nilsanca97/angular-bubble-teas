@@ -1,56 +1,76 @@
-<form [formGroup]="registerForm">
-  <!-- Nombre -->
-  <div>
-    <label for="name">Name</label>
-    <input id="name" formControlName="name" type="text" (blur)="registerForm.get('name')?.markAsTouched()" />
-    @if (registerForm.get('name')?.hasError('required') && registerForm.get('name')?.touched) {
-      <span class="error">El nombre es requerido</span>
-    }
+<div class="register-container">
+  <div class="register-card">
+    <h2>Crear cuenta</h2>
+
+    <form [formGroup]="registerForm"> 
+      <!-- Nombre -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="name" (blur)="registerForm.get('name')?.markAsTouched()" />
+        
+        <!-- Errores para Nombre -->
+        @if (registerForm.get('name')?.hasError('required') && registerForm.get('name')?.touched) {
+          <mat-error>El nombre es requerido</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Email -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput id="email" formControlName="email" type="email" (blur)="registerForm.get('email')?.markAsTouched()" />
+        
+        <!-- Errores para Email -->
+        @if (registerForm.get('email')?.hasError('required') && registerForm.get('email')?.touched) {
+          <mat-error>El email es requerido</mat-error>
+        }
+        @if (registerForm.get('email')?.hasError('email') && registerForm.get('email')?.touched) {
+          <mat-error>Ingresa un email válido</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Password -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Contraseña</mat-label>
+        <input matInput id="password" formControlName="password" type="password" (blur)="registerForm.get('password')?.markAsTouched()" />
+        
+        <!-- Errores para Password -->
+        @if (registerForm.get('password')?.hasError('required') && registerForm.get('password')?.touched) {
+          <mat-error>La contraseña es requerida</mat-error>
+        }
+        @if (registerForm.get('password')?.hasError('minlength') && registerForm.get('password')?.touched) {
+          <mat-error>La contraseña debe tener al menos 6 caracteres</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Confirm Password -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Confirmar Contraseña</mat-label>
+        <input matInput id="confirmPassword" formControlName="confirmPassword" type="password" (blur)="registerForm.get('confirmPassword')?.markAsTouched()" />
+        
+        <!-- Errores para Confirm Password -->
+        @if (registerForm.get('confirmPassword')?.hasError('required') && registerForm.get('confirmPassword')?.touched) {
+          <mat-error>Confirma la contraseña</mat-error>
+        }
+        @if (registerForm.hasError('passwordsMismatch') && registerForm.get('confirmPassword')?.touched) {
+          <mat-error>Las contraseñas no coinciden</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Botón deshabilitado si el formulario es inválido -->
+      <button 
+        type="button" 
+        (click)="onRegisterClick()" 
+        [disabled]="registerForm.invalid">
+        Registrar
+      </button>
+
+      <!-- Mensaje de error general si hay errores y el formulario fue tocado -->
+      @if (registerForm.invalid && registerForm.touched) {
+        <div class="error-alert">
+          <mat-icon>error_outline</mat-icon>
+          <span>Por favor, corrige los errores del formulario</span>
+        </div>
+      }
+    </form>
   </div>
-
-  <!-- Email -->
-  <div>
-    <label for="email">Email</label>
-    <input id="email" formControlName="email" type="email" (blur)="registerForm.get('email')?.markAsTouched()" />
-    @if (registerForm.get('email')?.hasError('required') && registerForm.get('email')?.touched) {
-      <span class="error">El email es requerido</span>
-    }
-    @if (registerForm.get('email')?.hasError('email') && registerForm.get('email')?.touched) {
-      <span class="error">Ingresa un email válido</span>
-    }
-  </div>
-
-  <!-- Password -->
-  <div>
-    <label for="password">Password</label>
-    <input id="password" formControlName="password" type="password" (blur)="registerForm.get('password')?.markAsTouched()" />
-    @if (registerForm.get('password')?.hasError('required') && registerForm.get('password')?.touched) {
-      <span class="error">La contraseña es requerida</span>
-    }
-    @if (registerForm.get('password')?.hasError('minlength') && registerForm.get('password')?.touched) {
-      <span class="error">La contraseña debe tener al menos 6 caracteres</span>
-    }
-  </div>
-
-  <!-- Confirm Password -->
-  <div>
-    <label for="confirmPassword">Confirm Password</label>
-    <input id="confirmPassword" formControlName="confirmPassword" type="password" (blur)="registerForm.get('confirmPassword')?.markAsTouched()" />
-    @if (registerForm.get('confirmPassword')?.hasError('required') && registerForm.get('confirmPassword')?.touched) {
-      <span class="error">Confirma la contraseña</span>
-    }
-  </div>
-
-  <!-- Botón deshabilitado si el formulario es inválido -->
-  <button 
-    type="button" 
-    (click)="onRegisterClick()" 
-    [disabled]="registerForm.invalid">
-    Registrar
-  </button>
-
-  <!-- Mensaje de error general si hay errores y el formulario fue tocado -->
-  @if (registerForm.invalid && registerForm.touched) {
-    <div class="error-message">Por favor corrige los errores del formulario</div>
-  }
-</form>
+</div>  
