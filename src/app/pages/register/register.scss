@@ -1,0 +1,75 @@
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.register-card {
+  background: white;
+  border-radius: 8px;
+  padding: 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 480px;
+
+  h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 24px;
+    font-size: 22px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  input,
+  label {
+    font-size: 14px;
+  }
+
+  .error {
+    color: #c62828;
+    font-size: 12px;
+    display: block;
+    margin-top: 6px;
+  }
+
+  .error-message {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background-color: #ffebee;
+    color: #c62828;
+    border-radius: 4px;
+    margin-top: 12px;
+    font-size: 14px;
+  }
+
+  button {
+    padding: 10px 14px;
+    font-weight: 600;
+  }
+
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* Adaptaciones responsive */
+@media (max-width: 480px) {
+  .register-card {
+    padding: 24px;
+  }
+}
