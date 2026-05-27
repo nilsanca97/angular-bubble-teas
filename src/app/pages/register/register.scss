@@ -18,8 +18,8 @@
   h2 {
     text-align: center;
     color: #333;
-    margin-bottom: 24px;
-    font-size: 22px;
+    margin-bottom: 30px;
+    font-size: 24px;
   }
 
   form {
@@ -56,6 +56,22 @@
     font-size: 14px;
   }
 
+  .error-alert {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background-color: #ffebee;
+    color: #c62828;
+    border-radius: 4px;
+    margin-top: 16px;
+    font-size: 14px;
+
+    mat-icon {
+      font-size: 20px;
+    }
+  }
+  
   button {
     padding: 10px 14px;
     font-weight: 600;
