@@ -2,7 +2,7 @@ export interface BubbleTea {
   id: number;
   name: string;
   temperature: number;
-  price: number;
+  precio: number;
   active: boolean;
 }
 
