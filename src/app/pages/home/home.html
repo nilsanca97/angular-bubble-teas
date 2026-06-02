@@ -1,1 +1,18 @@
-<p>home works!</p>
+<h1>Bubble Teas</h1>
+
+<!-- PASO 5: recorremos la lista "bubbleTeas" (la del home.ts) -->
+<!-- Por cada "tea" de la lista, dibujamos una tarjeta. -->
+<!-- track tea.id -> usamos el id (único) para que Angular optimice el repintado. -->
+@for (tea of bubbleTeas(); track tea.id) {
+  <div class="card">
+    <!-- {{ }} = interpolación: mete el valor real del objeto en el HTML -->
+    <h3>{{ tea.name }}</h3>
+    <p>Precio: {{ tea.precio }} €</p>
+    <p>Temperatura: {{ tea.temperature }} °C</p>
+    <p>Estado: {{ tea.active ? 'Activo' : 'Inactivo' }}</p>
+  </div>
+}
+<!-- PASO 6 (buena práctica): si la lista está vacía, mostramos un mensaje -->
+@empty {
+  <p>No hay bubble teas para mostrar.</p>
+}
