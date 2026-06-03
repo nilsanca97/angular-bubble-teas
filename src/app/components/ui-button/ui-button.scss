@@ -1,0 +1,14 @@
+// Estilo común para TODOS los botones de la app.
+// Así garantizamos mismo tamaño y forma estén donde estén.
+.ui-button {
+  // Forma de "píldora" (bordes muy redondeados), como en el diseño.
+  border-radius: 20px;
+
+  // Tamaño consistente: ancho mínimo y altura cómoda.
+  min-width: 120px;
+  height: 40px;
+
+  // Texto compacto y legible.
+  font-size: 13px;
+  font-weight: 600;
+}

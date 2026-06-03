@@ -1,0 +1,13 @@
+<!-- Botón de Angular Material. -->
+<!-- [matButton]="appearance()" -> relleno ('filled') u outline ('outlined'). -->
+<!-- color="primary" -> usa el color principal del tema. -->
+<!-- (click) -> llamamos a onClick(), que decide si emitir el evento 'clicked'. -->
+<button
+  class="ui-button"
+  [matButton]="appearance()"
+  color="primary"
+  type="button"
+  [disabled]="disabled()"
+  (click)="onClick()">
+  {{ label() }}
+</button>
