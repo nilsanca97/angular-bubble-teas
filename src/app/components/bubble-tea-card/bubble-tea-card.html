@@ -1,0 +1,31 @@
+<!-- Tarjeta de Material que contiene toda la información de un bubble tea. -->
+<mat-card class="bubble-tea-card">
+  <!-- Título de la tarjeta: el nombre del bubble tea. -->
+  <h3 class="bubble-tea-card__title">{{ tea().name }}</h3>
+
+  <!-- Cuerpo: una fila por campo. Cada fila = rectángulo (field-label) + valor. -->
+  <mat-card-content class="bubble-tea-card__content">
+    <div class="bubble-tea-card__row">
+      <app-field-label text="Precio" />
+      <span class="bubble-tea-card__value">{{ tea().precio }} €</span>
+    </div>
+
+    <div class="bubble-tea-card__row">
+      <app-field-label text="Temperatura" />
+      <span class="bubble-tea-card__value">{{ tea().temperature }} °C</span>
+    </div>
+
+    <div class="bubble-tea-card__row">
+      <app-field-label text="Estado" />
+      <!-- Operador ternario: si active es true -> "Activo", si no -> "Inactivo". -->
+      <span class="bubble-tea-card__value">{{ tea().active ? 'Activo' : 'Inactivo' }}</span>
+    </div>
+  </mat-card-content>
+
+  <!-- Acciones: los 3 botones. Cada uno avisa al padre con su evento. -->
+  <mat-card-actions class="bubble-tea-card__actions">
+    <app-ui-button label="Ver detalles" (clicked)="onViewDetails()" />
+    <app-ui-button label="Editar" (clicked)="onEdit()" />
+    <app-ui-button label="Borrar" (clicked)="onDelete()" />
+  </mat-card-actions>
+</mat-card>

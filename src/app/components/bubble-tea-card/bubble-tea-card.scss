@@ -1,0 +1,44 @@
+// Estilo de la tarjeta. Clases con notación BEM (bloque__elemento)
+// para que sean intuitivas y no choquen con otros estilos.
+.bubble-tea-card {
+  padding: 16px;
+
+  // Título centrado y destacado.
+  &__title {
+    margin: 0 0 16px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a2e;
+  }
+
+  // Cuerpo: filas apiladas en vertical con separación uniforme.
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  // Cada fila: rectángulo + valor alineados en horizontal.
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  // Texto del valor de cada campo.
+  &__value {
+    font-size: 14px;
+    color: #333;
+  }
+
+  // Zona de botones: centrados y con espacio entre ellos.
+  // flex-wrap para que en pantallas pequeñas pasen a otra línea.
+  &__actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+}
