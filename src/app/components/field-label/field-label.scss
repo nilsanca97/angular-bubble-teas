@@ -1,0 +1,22 @@
+// Estilo del "rectángulo" gris reutilizable.
+// Clase intuitiva (.field-label) y valores preparados para migrar
+// a variables SCSS centralizadas más adelante.
+.field-label {
+  // inline-block para que el fondo gris envuelva solo al texto.
+  display: inline-block;
+
+  // Cajita redondeada con relleno cómodo.
+  padding: 4px 12px;
+  border-radius: 6px;
+  background-color: #eceff1; // gris muy claro, como en el diseño
+
+  // Texto del título: compacto, en negrita y en mayúsculas.
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #5e35b1; // morado/índigo, acorde al tema indigo-pink
+
+  // Evita que el texto se parta en varias líneas dentro del chip.
+  white-space: nowrap;
+}
