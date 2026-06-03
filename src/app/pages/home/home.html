@@ -1,18 +1,28 @@
-<h1>Bubble Teas</h1>
+<!-- Contenedor general de la página. -->
+<section class="home">
+  <!-- Título principal. -->
+  <h1 class="home__title">Bubble Teas</h1>
 
-<!-- PASO 5: recorremos la lista "bubbleTeas" (la del home.ts) -->
-<!-- Por cada "tea" de la lista, dibujamos una tarjeta. -->
-<!-- track tea.id -> usamos el id (único) para que Angular optimice el repintado. -->
-@for (tea of bubbleTeas(); track tea.id) {
-  <div class="card">
-    <!-- {{ }} = interpolación: mete el valor real del objeto en el HTML -->
-    <h3>{{ tea.name }}</h3>
-    <p>Precio: {{ tea.precio }} €</p>
-    <p>Temperatura: {{ tea.temperature }} °C</p>
-    <p>Estado: {{ tea.active ? 'Activo' : 'Inactivo' }}</p>
+  <!-- Zona de acciones de la página: botón para crear uno nuevo. -->
+  <div class="home__actions">
+    <app-ui-button label="Crear nuevo bubble-tea" (clicked)="crear()" />
   </div>
-}
-<!-- PASO 6 (buena práctica): si la lista está vacía, mostramos un mensaje -->
-@empty {
-  <p>No hay bubble teas para mostrar.</p>
-}
+
+  <!-- Grid responsive: recorremos la lista y pintamos una tarjeta por cada tea. -->
+  <!-- track tea.id -> usamos el id (único) para que Angular optimice el repintado. -->
+  <div class="home__grid">
+    @for (tea of bubbleTeas(); track tea.id) {
+      <!-- [tea] -> le pasamos el objeto. (viewDetails/edit/delete) -> escuchamos -->
+      <!-- sus eventos y llamamos al método correspondiente con el tea recibido. -->
+      <app-bubble-tea-card
+        [tea]="tea"
+        (viewDetails)="verDetalles($event)"
+        (edit)="editar($event)"
+        (delete)="borrar($event)" />
+    }
+    <!-- Si la lista está vacía, mostramos un mensaje. -->
+    @empty {
+      <p class="home__empty">No hay bubble teas para mostrar.</p>
+    }
+  </div>
+</section>

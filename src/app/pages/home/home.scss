@@ -1,0 +1,42 @@
+// Estilos del LAYOUT de la página "home".
+// El aspecto de cada tarjeta NO se decide aquí (eso vive en mat-card
+// y en bubble-tea-card.scss). Aquí solo maquetamos la página.
+.home {
+  // Contenido centrado y con un ancho máximo cómodo de leer.
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px;
+
+  // Título principal: grande y centrado, como en el diseño.
+  &__title {
+    text-align: center;
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+  }
+
+  // Zona del botón "Crear nuevo": centrada.
+  &__actions {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 32px;
+  }
+
+  // Grid RESPONSIVE: las tarjetas se reorganizan solas según el ancho.
+  // auto-fill -> crea tantas columnas como quepan.
+  // minmax(300px, 1fr) -> cada tarjeta mide mínimo 300px y como máximo
+  // reparte el espacio sobrante por igual. En móvil queda 1 columna.
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  // Mensaje cuando no hay tarjetas: ocupa todo el ancho del grid y centrado.
+  &__empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #777;
+  }
+}
