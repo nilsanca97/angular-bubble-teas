@@ -15,11 +15,6 @@
       <span class="bubble-tea-card__value">{{ tea().temperature }} °C</span>
     </div>
 
-    <div class="bubble-tea-card__row">
-      <app-field-label text="Estado" />
-      <!-- Operador ternario: si active es true -> "Activo", si no -> "Inactivo". -->
-      <span class="bubble-tea-card__value">{{ tea().active ? 'Activo' : 'Inactivo' }}</span>
-    </div>
   </mat-card-content>
 
   <!-- Acciones: los 3 botones. Cada uno avisa al padre con su evento. -->
