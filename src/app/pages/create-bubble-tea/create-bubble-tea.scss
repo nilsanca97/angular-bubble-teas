@@ -1,0 +1,18 @@
+// Página centrada y en columna, con el mismo ancho que el formulario.
+.create-bubble-tea {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 400px;
+  margin: 2rem auto;
+}
+
+.create-bubble-tea__title {
+  margin: 0;
+}
+
+// Texto de error en rojo.
+.create-bubble-tea__error {
+  color: #b00020;
+  margin: 0;
+}

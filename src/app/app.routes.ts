@@ -6,6 +6,11 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/home/home').then(m => m.Home)
     },
     {
+        // NUEVA: página para crear un bubble tea.
+        path: 'create',
+        loadComponent: () => import('./pages/create-bubble-tea/create-bubble-tea').then(m => m.CreateBubbleTea)
+    },
+    {
         path: 'register',
         loadComponent: () => import('./pages/register/register').then(m => m.Register)
     },

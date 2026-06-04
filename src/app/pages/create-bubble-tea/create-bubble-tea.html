@@ -1,0 +1,15 @@
+<section class="create-bubble-tea">
+  <h2 class="create-bubble-tea__title">Nuevo bubble tea</h2>
+
+  <!-- Formulario reutilizable en modo CREAR (no le pasamos initialValue). -->
+  <!-- Cuando emite (formSubmit), ejecutamos onFormSubmit con el payload ($event). -->
+  <app-bubble-tea-form (formSubmit)="onFormSubmit($event)" />
+
+  <!-- Mensaje de error (p. ej. el 401 esperado hasta que tengamos el token). -->
+  @if (errorMessage()) {
+    <p class="create-bubble-tea__error">{{ errorMessage() }}</p>
+  }
+
+  <!-- Botón Cancelar: vuelve a la home. variant="outline" = acción secundaria. -->
+  <app-ui-button label="Cancelar" variant="outline" (clicked)="onCancel()" />
+</section>
