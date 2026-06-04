@@ -11,6 +11,12 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/create-bubble-tea/create-bubble-tea').then(m => m.CreateBubbleTea)
     },
     {
+        // NUEVA: página para editar un bubble tea. El :id viaja en la URL
+        // y llega al componente como input (gracias a withComponentInputBinding).
+        path: 'edit/:id',
+        loadComponent: () => import('./pages/edit-bubble-tea/edit-bubble-tea').then(m => m.EditBubbleTea)
+    },
+    {
         path: 'register',
         loadComponent: () => import('./pages/register/register').then(m => m.Register)
     },

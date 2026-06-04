@@ -1,0 +1,27 @@
+<section class="edit-bubble-tea">
+  <h2 class="edit-bubble-tea__title">Editar bubble tea</h2>
+
+  @if (tea()) {
+    <!-- Modo EDITAR: pasamos initialValue para que el form se precargue (effect). -->
+    <!-- Cuando emite (formSubmit), ejecutamos onFormSubmit con el payload ($event). -->
+    <app-bubble-tea-form [initialValue]="tea()" (formSubmit)="onFormSubmit($event)" />
+
+    <!-- Error al GUARDAR (p. ej. el 401 esperado hasta tener el token). -->
+    @if (errorMessage()) {
+      <p class="edit-bubble-tea__error">{{ errorMessage() }}</p>
+    }
+
+    <!-- Cancelar: vuelve a home sin guardar. -->
+    <app-ui-button label="Cancelar" variant="outline" (clicked)="onCancel()" />
+  } @else {
+    <!-- Aún no hay tea: o está cargando, o falló la carga. -->
+    @if (errorMessage()) {
+      <p class="edit-bubble-tea__error">{{ errorMessage() }}</p>
+    } @else {
+      <p>Cargando…</p>
+    }
+
+    <!-- Permitimos volver a home aunque la carga haya fallado. -->
+    <app-ui-button label="Volver" variant="outline" (clicked)="onCancel()" />
+  }
+</section>
