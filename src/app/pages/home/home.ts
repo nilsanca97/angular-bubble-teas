@@ -1,4 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core'; // → la "interfaz" que nos da el momento ngOnInit. signal → caja reactiva que avisa a la pantalla.
+import { Component, OnInit, inject, signal } from '@angular/core'; // signal → caja reactiva que avisa a la pantalla.
+import { Router } from '@angular/router'; // Router → para navegar a otras páginas (crear/editar).
 import { BubbleTea } from '../../models/interfaces'; // → la interface (BubbleTea), para tipar la libreta.
 import { BubbleTeaService } from '../../services/bubble-tea.service';
 // Componentes reutilizables que usamos en el template del home.
@@ -17,49 +18,75 @@ import { UiButton } from '../../components/ui-button/ui-button';
 // implements OnInit -> es una promesa: "esta clase tendrá un método ngOnInit"
 export class Home implements OnInit {
 
-
-  // PASO 2: la "libreta" reactiva donde guardaremos los bubble teas. Empieza vacía.
+  // La "libreta" reactiva donde guardaremos los bubble teas. Empieza vacía.
   // Al ser una signal, cuando cambie avisará sola a la pantalla para repintar.
   bubbleTeas = signal<BubbleTea[]>([]);
 
-  // PASO 1: inyectamos el service (el "teléfono" a la cocina/backend)
-  constructor(private bubbleTeaService: BubbleTeaService) {}
+  // inject() -> inyección moderna. Migramos el home a este estilo (antes era
+  // por constructor) para usar también el Router de forma coherente.
+  private bubbleTeaService = inject(BubbleTeaService);
+  private router = inject(Router);
 
-  // PASO 3: ngOnInit se ejecuta cuando la página se carga. Aquí arrancamos el trabajo.
+  // ngOnInit se ejecuta cuando la página se carga. Aquí arrancamos el trabajo.
   ngOnInit(): void {
-    // PASO 4: pedimos los datos y nos suscribimos.
-    // Cuando lleguen, los guardamos en la libreta.
+    this.cargarBubbleTeas();
+  }
+
+  /**
+   * Pide la lista de bubble teas al backend y la guarda en la signal.
+   * Lo extraemos a un método porque lo usamos en dos sitios: al cargar la
+   * página (ngOnInit) y tras borrar (para refrescar la lista).
+   */
+  private cargarBubbleTeas(): void {
     this.bubbleTeaService.getAll().subscribe((datos) => {
-      // .set() mete los datos en la signal Y avisa a la pantalla para que repinte
+      // .set() mete los datos en la signal Y avisa a la pantalla para que repinte.
       this.bubbleTeas.set(datos);
     });
   }
 
-  // --- Métodos de acción (placeholders) ---
-  // De momento solo imprimen en consola. La lógica real (navegar, borrar en el
-  // backend...) NO es parte de este diseño visual, por eso quedan como TODO.
+  // --- Métodos de acción ---
 
-  /** Acción del botón "Crear nuevo bubble-tea". */
+  /** Botón "Crear nuevo bubble-tea": navega a la página de creación (/create). */
   protected crear(): void {
-    // TODO: navegar al formulario de creación.
-    console.log('Crear nuevo bubble tea');
+    this.router.navigate(['create']);
   }
 
-  /** Acción del botón "Ver detalles" de una tarjeta. */
+  /** Botón "Ver detalles" de una tarjeta. */
   protected verDetalles(tea: BubbleTea): void {
-    // TODO: navegar a la página de detalle de este bubble tea.
+    // TODO: feat futura -> navegar a la página de detalle de este bubble tea.
     console.log('Ver detalles:', tea);
   }
 
-  /** Acción del botón "Editar" de una tarjeta. */
+  /** Botón "Editar" de una tarjeta: navega a /edit/:id con el id del tea. */
   protected editar(tea: BubbleTea): void {
-    // TODO: navegar al formulario de edición de este bubble tea.
-    console.log('Editar:', tea);
+    this.router.navigate(['edit', tea.id]);
   }
 
-  /** Acción del botón "Borrar" de una tarjeta. */
+  /**
+   * Botón "Borrar" de una tarjeta.
+   * 1. Pedimos confirmación (acción destructiva) con window.confirm.
+   * 2. Si confirma, llamamos al backend para borrar.
+   * 3. Si va bien, recargamos la lista; si falla, lo registramos en consola.
+   *
+   * NOTA: el frontend solo "pide borrar"; el backend decide CÓMO (hoy borra
+   * físicamente; en el futuro será un soft-delete que pondrá active=false).
+   * Además, hasta tener el token, el DELETE responderá 401 (esperado).
+   */
   protected borrar(tea: BubbleTea): void {
-    // TODO: llamar al servicio para borrar y refrescar la lista.
-    console.log('Borrar:', tea);
+    const confirmado = window.confirm(`¿Seguro que quieres borrar "${tea.name}"?`);
+    if (!confirmado) {
+      return;
+    }
+
+    this.bubbleTeaService.delete(tea.id).subscribe({
+      next: () => {
+        // Borrado OK en el backend -> refrescamos la lista para reflejarlo.
+        this.cargarBubbleTeas();
+      },
+      error: (err) => {
+        // 401 esperado hasta implementar el token (Interceptor).
+        console.error('Error al borrar el bubble tea:', err);
+      },
+    });
   }
 }
