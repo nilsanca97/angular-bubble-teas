@@ -1,0 +1,42 @@
+<!-- Formulario reutilizable de bubble tea (crear/editar). -->
+<!-- [formGroup] enlaza este <form> con el FormGroup definido en el .ts. -->
+<form [formGroup]="form" class="bubble-tea-form">
+
+  <!-- Nombre -->
+  <mat-form-field appearance="outline" class="bubble-tea-form__field">
+    <mat-label>Nombre</mat-label>
+    <input matInput formControlName="name" />
+    @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
+      <mat-error>El nombre es requerido</mat-error>
+    }
+  </mat-form-field>
+
+  <!-- Temperatura -->
+  <mat-form-field appearance="outline" class="bubble-tea-form__field">
+    <mat-label>Temperatura (°C)</mat-label>
+    <input matInput type="number" formControlName="temperature" />
+    @if (form.get('temperature')?.hasError('required') && form.get('temperature')?.touched) {
+      <mat-error>La temperatura es requerida</mat-error>
+    }
+  </mat-form-field>
+
+  <!-- Precio -->
+  <mat-form-field appearance="outline" class="bubble-tea-form__field">
+    <mat-label>Precio (€)</mat-label>
+    <input matInput type="number" formControlName="precio" />
+    @if (form.get('precio')?.hasError('required') && form.get('precio')?.touched) {
+      <mat-error>El precio es requerido</mat-error>
+    }
+    @if (form.get('precio')?.hasError('min') && form.get('precio')?.touched) {
+      <mat-error>El precio no puede ser negativo</mat-error>
+    }
+  </mat-form-field>
+
+  <!-- Botón de enviar: reutilizamos UiButton. -->
+  <!-- El texto (submitLabel) se deduce solo del modo crear/editar. -->
+  <!-- Se deshabilita si el formulario es inválido. -->
+  <app-ui-button
+    [label]="submitLabel()"
+    [disabled]="form.invalid"
+    (clicked)="onSubmit()" />
+</form>
