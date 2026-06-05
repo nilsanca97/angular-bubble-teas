@@ -16,6 +16,9 @@ export type BubbleTeaPayload = Omit<BubbleTea, 'id'>;
 export interface User {
     id: number;
     name: string;
+    surname: string;
     email: string;
-    password: string;
+    birth_date: string | null; // fecha ISO 'YYYY-MM-DD'; null si el usuario no la tiene (DATE NULL en BD)
+    active: boolean;
+    notifications: boolean;
 }
