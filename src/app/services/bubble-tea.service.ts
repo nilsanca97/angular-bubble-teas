@@ -2,14 +2,16 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BubbleTea, BubbleTeaPayload } from '../models/interfaces';
+import { API_URL } from '../core/api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BubbleTeaService {
 
-  // URL base de nuestro backend (FastAPI) para los bubble teas
-  private apiUrl = 'http://localhost:8000/bubble-teas';
+  // Endpoint de bubble teas, construido a partir de la URL base compartida (API_URL).
+  // Así la URL del backend vive en un único sitio (core/api.config.ts).
+  private apiUrl = `${API_URL}/bubble-teas`;
 
   // inject() -> forma moderna de inyección de dependencias en Angular.
   // Angular nos da una instancia lista de HttpClient (la herramienta para
