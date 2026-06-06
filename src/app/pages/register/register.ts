@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Credentials } from '../../models/interfaces';
 import { AuthService } from '../../services/auth.service';
 
 //importar clases de angular Material para usar en el formulario de register (CSS: estilo visual)
@@ -28,11 +29,11 @@ export class Register {
       nonNullable: true,
       validators: [Validators.required]
     }),
-    email: new FormControl<string>('', {
+    email: new FormControl<Credentials['email']>('', {
       nonNullable: true,
       validators: [Validators.required, Validators.email]
     }),
-    password: new FormControl<string>('', {
+    password: new FormControl<Credentials['password']>('', {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(6)]
     }),
