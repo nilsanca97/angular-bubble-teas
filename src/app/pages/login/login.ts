@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { User } from '../../models/interfaces';
+import { Credentials } from '../../models/interfaces';
 import { AuthService } from '../../services/auth.service';
 //importar clases de angular Material para usar en el formulario de login (CSS: estilo visual)
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,11 +31,11 @@ export class Login {
   ) {}
   
   protected loginForm = new FormGroup({
-    email: new FormControl<User['email']>('', {
+    email: new FormControl<Credentials['email']>('', {
       nonNullable: true,
       validators: [Validators.required, Validators.email]
     }),
-    password: new FormControl<User['password']>('', {
+    password: new FormControl<Credentials['password']>('', {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(6)]
     }),
