@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Credentials } from '../../models/interfaces';
 import { AuthService } from '../../services/auth.service';
@@ -10,6 +10,23 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+
+// Validador de GRUPO: comprueba que 'password' y 'confirmPassword' coincidan.
+// Devuelve { passwordsMismatch: true } si difieren -> el .html ya muestra ese error
+// y, como el botón está [disabled]="registerForm.invalid", también se deshabilita.
+// Si confirmPassword aún está vacío, devolvemos null: dejamos que su Validators.required
+// se encargue, para no mostrar dos errores a la vez ("requerido" + "no coinciden").
+const passwordsMatchValidator: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
+  const password = group.get('password')?.value;
+  const confirmPassword = group.get('confirmPassword')?.value;
+
+  if (!confirmPassword) {
+    return null;
+  }
+
+  return password === confirmPassword ? null : { passwordsMismatch: true };
+};
+
 @Component({
   selector: 'app-register',
   imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatCheckboxModule],
@@ -57,16 +74,10 @@ export class Register {
       nonNullable: true,
       validators: [Validators.required]
     }),
-  });
+  }, { validators: passwordsMatchValidator });
 
   protected onRegisterClick(): void {
-    const { name, email, password, confirmPassword } = this.registerForm.value;
-    
-    //2. Validar que las contraseñas coincidan
-    if (password !== confirmPassword) {
-    console.error('Las contraseñas no coinciden');
-    return;
-    }
+    const { email, password } = this.registerForm.value;
 
     //Llamar al método de registro del servicio de autenticación (firebase)
     //3. envia a Firebase y espera la respuesta.
