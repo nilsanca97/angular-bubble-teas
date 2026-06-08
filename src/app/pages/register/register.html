@@ -14,6 +14,17 @@
         }
       </mat-form-field>
 
+      <!-- Apellido -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Apellido</mat-label>
+        <input matInput formControlName="surname" (blur)="registerForm.get('surname')?.markAsTouched()" />
+
+        <!-- Errores para Apellido -->
+        @if (registerForm.get('surname')?.hasError('required') && registerForm.get('surname')?.touched) {
+          <mat-error>El apellido es requerido</mat-error>
+        }
+      </mat-form-field>
+
       <!-- Email -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Email</mat-label>
@@ -26,6 +37,12 @@
         @if (registerForm.get('email')?.hasError('email') && registerForm.get('email')?.touched) {
           <mat-error>Ingresa un email válido</mat-error>
         }
+      </mat-form-field>
+
+      <!-- Fecha de nacimiento (opcional) -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Fecha de nacimiento</mat-label>
+        <input matInput formControlName="birth_date" type="date" />
       </mat-form-field>
 
       <!-- Password -->
@@ -56,9 +73,14 @@
         }
       </mat-form-field>
 
+      <!-- Notificaciones (opt-in): checkbox desmarcado por defecto -->
+      <mat-checkbox formControlName="notifications">
+        Quiero recibir notificaciones
+      </mat-checkbox>
+
       <!-- Botón deshabilitado si el formulario es inválido -->
-      <button 
-        type="button" 
+      <button
+        type="button"
         (click)="onRegisterClick()" 
         [disabled]="registerForm.invalid">
         Registrar

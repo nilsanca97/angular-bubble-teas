@@ -9,9 +9,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatCheckboxModule],
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
@@ -29,9 +30,24 @@ export class Register {
       nonNullable: true,
       validators: [Validators.required]
     }),
+    // Apellido: obligatorio, espeja a 'name' (BD NOT NULL, schema surname: str).
+    surname: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required]
+    }),
     email: new FormControl<Credentials['email']>('', {
       nonNullable: true,
       validators: [Validators.required, Validators.email]
+    }),
+    // Fecha de nacimiento: OPCIONAL (BD DATE NULL). El input nativo type="date"
+    // da string 'YYYY-MM-DD' (o '' si está vacío), que encaja con User.birth_date.
+    // La conversión '' -> null al construir el payload se hará en el INCR3.
+    birth_date: new FormControl<string>('', {
+      nonNullable: true
+    }),
+    // Notificaciones: opt-in -> checkbox desmarcado por defecto (false).
+    notifications: new FormControl<boolean>(false, {
+      nonNullable: true
     }),
     password: new FormControl<Credentials['password']>('', {
       nonNullable: true,
