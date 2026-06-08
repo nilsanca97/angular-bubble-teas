@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Credentials } from '../../models/interfaces';
+import { firstValueFrom } from 'rxjs';
+import { Credentials, UserPayload } from '../../models/interfaces';
 import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
 
 //importar clases de angular Material para usar en el formulario de register (CSS: estilo visual)
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -42,6 +44,10 @@ export class Register {
     private router: Router
   ) {}
 
+  // inject() en el código nuevo (UserService): graba la fila User en la BD tras el
+  // registro en Firebase. AuthService/Router siguen por constructor (migración aparte).
+  private userService = inject(UserService);
+
   protected registerForm = new FormGroup({
     name: new FormControl<string>('', {
       nonNullable: true,
@@ -76,20 +82,41 @@ export class Register {
     }),
   }, { validators: passwordsMatchValidator });
 
-  protected onRegisterClick(): void {
-    const { email, password } = this.registerForm.value;
+  protected async onRegisterClick(): Promise<void> {
+    // getRawValue(): los controles son nonNullable, así que devuelve el objeto
+    // completo y tipado (sin undefined) -> no hacen falta aserciones "!".
+    const { name, surname, email, birth_date, notifications, password } =
+      this.registerForm.getRawValue();
 
-    //Llamar al método de registro del servicio de autenticación (firebase)
-    //3. envia a Firebase y espera la respuesta.
-    this.authService.register(email!, password!)
-      .then(response => {
-        console.log('Registro exitoso:', response);
-        // redirigimos al home tras registro exitoso
-        this.router.navigate(['']);
-      })
-      .catch(error => {
-        console.error('Error en registro:', error.message);
-      });
-  
+    // Paso 1: registro en Firebase. Si falla (email ya existe, password débil, red...),
+    // NO seguimos ni navegamos: el usuario se queda en /register para corregir y reintentar.
+    try {
+      await this.authService.register(email, password);
+    } catch (error) {
+      console.error('Error en el registro de Firebase:', error);
+      return;
+    }
+
+    // Paso 2: grabar la fila User en la BD. birth_date '' -> null (la BD es DATE NULL y
+    // Pydantic rechaza ''); active siempre true (no se pregunta).
+    const payload: UserPayload = {
+      name,
+      surname,
+      email,
+      birth_date: birth_date || null,
+      active: true,
+      notifications,
+    };
+
+    // Si falla (fila huérfana: registrado en Firebase pero sin fila en BD), avisamos por
+    // consola pero navegamos igual: el usuario YA está autenticado y se autorreparará
+    // con el futuro get-or-create de /me.
+    try {
+      await firstValueFrom(this.userService.create(payload));
+    } catch (error) {
+      console.error('Usuario registrado en Firebase, pero falló la grabación en BD:', error);
+    }
+
+    this.router.navigate(['']);
   }
 }
