@@ -23,6 +23,12 @@ export interface User {
     notifications: boolean;
 }
 
+// Payload para CREAR/EDITAR un User: es un User SIN el "id".
+// El backend genera el id solo; en POST/PUT enviamos el resto de campos
+// (coincide con UserCreate de FastAPI: name, surname, email, birth_date, active, notifications).
+// Usamos Omit<> para no repetir los campos: si mañana cambia User, este tipo se actualiza solo.
+export type UserPayload = Omit<User, 'id'>;
+
 // Credenciales de autenticación (las gestiona Firebase): email + password.
 // Es un dominio DISTINTO de la entidad de negocio User -> por eso es una interface
 // independiente (no usa User['email']). La page login y register tipan sus
