@@ -1,9 +1,11 @@
-import { Injectable } from '@angular/core';
-import { 
-  createUserWithEmailAndPassword, 
+import { Injectable, signal, computed } from '@angular/core';
+import {
+  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  onAuthStateChanged,
   Auth,
+  User as FirebaseUser,
   UserCredential
 } from 'firebase/auth';
 import { auth } from '../config/firebase.config';
@@ -12,8 +14,24 @@ import { auth } from '../config/firebase.config';
   providedIn: 'root'
 })
 export class AuthService {
-  
-  constructor() {}
+
+  // Fuente de verdad reactiva de la sesión: el usuario de Firebase (o null).
+  // PRIVADO a propósito: encapsulamos el SDK aquí; el resto de la app NO recibe
+  // tipos de Firebase (mismo criterio que el interceptor). Lo rellena onAuthStateChanged.
+  private currentUser = signal<FirebaseUser | null>(null);
+
+  // API PÚBLICA estrecha: "¿hay sesión?" como signal de solo lectura. Los consumidores
+  // (p. ej. Home) gatean con esto sin conocer Firebase. Si más adelante hiciera falta
+  // exponer email/uid, se añade aquí derivándolo del mismo signal privado.
+  readonly isLoggedIn = computed(() => this.currentUser() !== null);
+
+  constructor() {
+    // onAuthStateChanged es la fuente de verdad canónica de Firebase: dispara cuando
+    // se resuelve la sesión (incluida la restauración tras recargar la página) y en
+    // cada login/logout. NO desuscribimos a propósito: el servicio es providedIn:'root'
+    // y el listener debe vivir lo que vive la app.
+    onAuthStateChanged(auth, (user) => this.currentUser.set(user));
+  }
 
   register(email: string, password: string): Promise<UserCredential> {
     return createUserWithEmailAndPassword(auth, email, password);
