@@ -26,6 +26,13 @@ export class UserService {
     return this.http.get<User>(`${this.apiUrl}/${id}`);
   }
 
+  // GET /users/me  ->  devuelve el PERFIL PROPIO según el token (PROTEGIDO).
+  // El backend hace get-or-create: una fila recién auto-provisionada nace con
+  // name/surname = null (por eso User los admite como null).
+  getMe(): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/me`);
+  }
+
   // POST /users/  ->  CREA un usuario (PROTEGIDO).
   // Enviamos el payload SIN id; el backend nos devuelve el objeto creado (con id).
   create(payload: UserPayload): Observable<User> {
