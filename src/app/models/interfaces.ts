@@ -13,21 +13,31 @@ export interface BubbleTea {
 // este tipo se actualiza solo.
 export type BubbleTeaPayload = Omit<BubbleTea, 'id'>;
 
-export interface User {
-    id: number;
-    name: string;
-    surname: string;
+// Campos COMUNES a lectura y escritura (misma forma y estrictez en ambas).
+// Espeja UserBase del backend. name/surname NO van aquí porque difieren entre leer y escribir.
+interface UserBase {
     email: string;
     birth_date: string | null; // fecha ISO 'YYYY-MM-DD'; null si el usuario no la tiene (DATE NULL en BD)
     active: boolean;
     notifications: boolean;
 }
 
-// Payload para CREAR/EDITAR un User: es un User SIN el "id".
-// El backend genera el id solo; en POST/PUT enviamos el resto de campos
-// (coincide con UserCreate de FastAPI: name, surname, email, birth_date, active, notifications).
-// Usamos Omit<> para no repetir los campos: si mañana cambia User, este tipo se actualiza solo.
-export type UserPayload = Omit<User, 'id'>;
+// Modelo de LECTURA: lo que DEVUELVE la API (espeja UserResponse del backend).
+// name/surname pueden ser null: una fila auto-provisionada por GET /users/me nace sin
+// nombre (solo se conoce el email del token).
+export interface User extends UserBase {
+    id: number;
+    name: string | null;
+    surname: string | null;
+}
+
+// Payload de ESCRITURA para CREAR/EDITAR (espeja UserCreate del backend).
+// Aquí name/surname son OBLIGATORIOS: el alta explícita (registro) debe aportarlos;
+// el null solo aparece al LEER (perfil auto-provisionado), nunca al escribir.
+export interface UserPayload extends UserBase {
+    name: string;
+    surname: string;
+}
 
 // Credenciales de autenticación (las gestiona Firebase): email + password.
 // Es un dominio DISTINTO de la entidad de negocio User -> por eso es una interface
