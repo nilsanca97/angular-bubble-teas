@@ -1,7 +1,11 @@
 import { Component, OnInit, inject, signal } from '@angular/core'; // signal → caja reactiva que avisa a la pantalla.
+import { toObservable, toSignal } from '@angular/core/rxjs-interop'; // puente signals <-> observables.
 import { Router } from '@angular/router'; // Router → para navegar a otras páginas (crear/editar).
-import { BubbleTea } from '../../models/interfaces'; // → la interface (BubbleTea), para tipar la libreta.
+import { of, switchMap, catchError } from 'rxjs';
+import { BubbleTea, User } from '../../models/interfaces'; // interfaces para tipar la libreta y el perfil.
 import { BubbleTeaService } from '../../services/bubble-tea.service';
+import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
 // Componentes reutilizables que usamos en el template del home.
 import { BubbleTeaCard } from '../../components/bubble-tea-card/bubble-tea-card';
 import { UiButton } from '../../components/ui-button/ui-button';
@@ -26,6 +30,22 @@ export class Home implements OnInit {
   // por constructor) para usar también el Router de forma coherente.
   private bubbleTeaService = inject(BubbleTeaService);
   private router = inject(Router);
+  private authService = inject(AuthService);
+  private userService = inject(UserService);
+
+  // Perfil propio derivado del estado de sesión, para el saludo.
+  // toObservable(isLoggedIn) -> stream de "¿hay sesión?"; switchMap pide /me cuando la
+  // hay (y cancela la petición anterior si la sesión cambia -> sin carreras), o emite null
+  // cuando no la hay (así NO llamamos a /me sin sesión y evitamos el 401). catchError deja
+  // el stream vivo si /me falla. toSignal gestiona la suscripción y su teardown.
+  // Valores: undefined (cargando inicial) | null (sin sesión o error) | User (cargado).
+  protected readonly user = toSignal(
+    toObservable(this.authService.isLoggedIn).pipe(
+      switchMap((loggedIn) =>
+        loggedIn ? this.userService.getMe().pipe(catchError(() => of(null))) : of(null)
+      )
+    )
+  );
 
   // ngOnInit se ejecuta cuando la página se carga. Aquí arrancamos el trabajo.
   ngOnInit(): void {

@@ -1,5 +1,12 @@
 <!-- Contenedor general de la página. -->
 <section class="home">
+  <!-- Saludo al usuario logueado. Solo se pinta cuando ya tenemos su perfil (/me);
+       mientras carga o si no hay sesión NO mostramos nada (saludo aditivo, sin parpadeo).
+       Si la fila aún no tiene nombre (auto-provisionada), saludamos genérico. -->
+  @if (user(); as u) {
+    <p class="home__greeting">{{ u.name ? 'Hola, ' + u.name : 'Hola' }}</p>
+  }
+
   <!-- Título principal. -->
   <h1 class="home__title">Bubble Teas</h1>
 
