@@ -109,8 +109,8 @@ export class Register {
     };
 
     // Si falla (fila huérfana: registrado en Firebase pero sin fila en BD), avisamos por
-    // consola pero navegamos igual: el usuario YA está autenticado y se autorreparará
-    // con el futuro get-or-create de /me.
+    // consola pero navegamos igual: el usuario YA está autenticado y se autorrepara con el
+    // get-or-create de /me (localiza/crea la fila por firebase_uid, con backfill por email).
     try {
       await firstValueFrom(this.userService.create(payload));
     } catch (error) {
